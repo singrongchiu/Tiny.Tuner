@@ -605,12 +605,12 @@ module my_chip (
 );
     
     logic pdm_in;
-    assign io_in[0] = pdm_in
+    assign io_in[0] = pdm_in;
     // Basic counter design as an example
     // TODO: remove the counter design and use this module to insert your own design
     // DO NOT change the I/O header of this design
 
-    wire [6:0] sevseg;
+    logic [6:0] sevseg;
     assign io_out[6:0] = sevseg;
 
     parameter DATA_WIDTH = 8;
@@ -626,7 +626,6 @@ module my_chip (
   logic valid_out;
   logic mic_clk;
   logic clk_slower;
-  assign slowerclk = clk_slower;
 /*
   input clk,          // System clock - we are getting 5 MHz - will need 2.5 MHz
   input pdm_in,       // PDM microphone output
