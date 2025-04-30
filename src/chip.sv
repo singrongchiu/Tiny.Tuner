@@ -68,8 +68,8 @@ module pdm_to_pcm#(
   logic [9:0] pdm_buffer_index;
   logic [DATA_WIDTH-1:0] accumulator; 
   
-  always_ff @(posedge clk or posedge reset) begin
-    if (reset) begin
+always_ff @(posedge clk or negedge reset) begin
+	if (!reset) begin
       pdm_buffer_index = 0;
       accumulator = 0;
       // $display("RESET!!!!!!!!!!!!!!!!");
@@ -153,8 +153,8 @@ module Radix2FFTPipeline8N #(
     logic [STAGES:0] mic_input_index;
     logic mic_inputting_array;
   // Input stage
-    always_ff @(posedge clk or posedge reset) begin
-        if (reset) begin
+	always_ff @(posedge clk or negedge reset) begin
+		if (!reset) begin
 //           stage_valid[0] <= 0;
           mic_input_index <= 0;
           mic_inputting_array <= 0;
@@ -284,8 +284,8 @@ module Radix2FFTPipeline8N #(
 
   ///// STAGE 1
         // note, had to watch out for bit reversal
-        always_ff @(posedge clk or posedge reset) begin
-          if (reset) begin
+	always_ff @(posedge clk or negedge reset) begin
+		if (!reset) begin
             stage_valid1 <= 0;
           end
           else if (stage_valid0) begin
@@ -342,8 +342,8 @@ module Radix2FFTPipeline8N #(
   logic signed [DATA_WIDTH*2:0] temp_imag1;
   
   ////// STAGE 2
-      always_ff @(posedge clk or posedge reset) begin
-          if (reset) begin
+	always_ff @(posedge clk or negedge reset) begin
+	      if (!reset) begin
             stage_valid2 <= 0;
           end
         else if (stage_valid1) begin
@@ -411,8 +411,8 @@ module Radix2FFTPipeline8N #(
         end
   
   ////// STAGE 3
-  always_ff @(posedge clk or posedge reset) begin
-          if (reset) begin
+	always_ff @(posedge clk or negedge reset) begin
+	  if (!reset) begin
             stage_valid3 <= 0;
           end
     else if (stage_valid2) begin
@@ -460,8 +460,8 @@ module Radix2FFTPipeline8N #(
    assign out_max_magnitude = max_magnitude;
    
     // Output
-    always_ff @(posedge clk or posedge reset) begin
-        if (reset) begin
+	always_ff @(posedge clk or negedge reset) begin
+		if (!reset) begin
           out_valid = 1'b0;
 //           for (int i = 0; i < N; i++) begin
 //             out_real[i]  <= '0;
