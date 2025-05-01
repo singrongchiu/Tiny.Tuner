@@ -605,7 +605,7 @@ module my_chip (
 );
     
     logic pdm_in;
-    assign io_in[0] = pdm_in;
+    assign pdm_in = io_in[0];
     // Basic counter design as an example
     // TODO: remove the counter design and use this module to insert your own design
     // DO NOT change the I/O header of this design
@@ -620,11 +620,12 @@ module my_chip (
   output locked
 */
    logic pllclkout;
-     slowerclk myslowerclk(.clkin(clock), .clkout0(pllclkout), .locked());
+   slowerclk myslowerclk(.clkin(clock), .clkout0(pllclkout), .locked());
 
   logic [DATA_WIDTH-1:0] pcm_out;
   logic valid_out;
   logic mic_clk;
+  assign io_out[7] = mic_clk;
   logic clk_slower;
 /*
   input clk,          // System clock - we are getting 5 MHz - will need 2.5 MHz
