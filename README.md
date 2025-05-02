@@ -62,11 +62,11 @@ Due to the limited hardware resources available on the FPGA board, the FFT size 
 
 ## Testing
 N = 64 point FFT working shown in the following testbench: 
-https://www.edaplayground.com/x/M8Zf
+https://www.edaplayground.com/x/M8Zf  
 Note that the SV implementation above is generalizable to N=2^x points (with the caveat that the twiddle factors need to be regenerated for different N). 
 
-N = 8 point FFT working shown in the following testbench (stages are rolled out):
-https://edaplayground.com/x/B7y7
+N = 8 point FFT working shown in the following testbench (stages are rolled out):  
+https://edaplayground.com/x/B7y7  
 
 The output is verifiable by comparing it to an online FFT calculator like this one (https://scistatcalc.blogspot.com/2013/12/fft-calculator.html). Input the stage_real0 printed into the real values list, and the outputs should match. Note that the output indices from the EDAPlayground FFT are not bit reversed.  
 
