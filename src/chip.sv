@@ -2,6 +2,7 @@
 
 // Code your design here
 
+/*
 // diamond 3.7 accepts this PLL
 // diamond 3.8-3.9 is untested
 // diamond 3.10 or higher is likely to abort with error about unable to use feedback signal
@@ -47,6 +48,30 @@ EHXPLLL #(
         .ENCLKOP(1'b0),
         .LOCK(locked)
 	);
+endmodule : slowerclk
+*/
+module slowerclk
+(
+    input clkin, // 30 MHz, 0 deg
+    output clkout0, // 5 MHz, 0 deg
+    output locked
+);
+logic [7:0] counter;
+always_ff @(posedge clkin) begin
+  if (counter == 3) begin
+    clkout0 <= 0;
+    counter <= counter + 1;
+  end
+  else if (counter == 6) begin
+    clkout0 <= 1;
+    counter <= 0;
+  end
+  else begin
+    counter <= counter + 1;
+  end
+end
+assign locked = 1;
+
 endmodule : slowerclk
 
 module pdm_to_pcm#(
@@ -143,7 +168,7 @@ module Radix2FFTPipeline8N #(
   logic signed [DATA_WIDTH-1:0] mic_input_real1[N-1:0];
   logic signed [DATA_WIDTH-1:0] mic_input_imag0[N-1:0];
   logic signed [DATA_WIDTH-1:0] mic_input_imag1[N-1:0];
-    logic stage_valid0;
+  logic stage_valid0;
   logic stage_valid1;
   logic stage_valid2;
   logic stage_valid3;
@@ -285,7 +310,7 @@ module Radix2FFTPipeline8N #(
   ///// STAGE 1
         // note, had to watch out for bit reversal
 	always_ff @(posedge clk or negedge reset) begin
-		if (!reset) begin
+	  if (!reset) begin
             stage_valid1 <= 0;
           end
           else if (stage_valid0) begin
@@ -343,7 +368,7 @@ module Radix2FFTPipeline8N #(
   
   ////// STAGE 2
 	always_ff @(posedge clk or negedge reset) begin
-	      if (!reset) begin
+	  if (!reset) begin
             stage_valid2 <= 0;
           end
         else if (stage_valid1) begin
@@ -411,10 +436,10 @@ module Radix2FFTPipeline8N #(
         end
   
   ////// STAGE 3
-	always_ff @(posedge clk or negedge reset) begin
-	  if (!reset) begin
-            stage_valid3 <= 0;
-          end
+    always_ff @(posedge clk or negedge reset) begin
+	if (!reset) begin
+          stage_valid3 <= 0;
+        end
     else if (stage_valid2) begin
       /*
       $display("stage %d", 2);
@@ -554,14 +579,12 @@ module sevenseg
 // ABCDEFG
 // 0123456
 
-always_ff @(posedge clock) begin
-/*
-  if (reset) begin
+always_ff @(posedge clock or negedge reset) begin
+  if (!reset) begin
   // output 0: ABCDEF
     sevseg = 7'b1111111;
   end
-*/
-  if (digit == 0) begin
+  else if (digit == 0) begin
     // output 0: ABCDEF
     sevseg = 7'b1111110;
   end
@@ -604,8 +627,8 @@ module my_chip (
     input logic reset // Important: Reset is ACTIVE-HIGH
 );
     
-    logic pdm_in;
-    assign pdm_in = io_in[0];
+   //  logic pdm_in;
+   //  assign pdm_in = io_in[0];
     // Basic counter design as an example
     // TODO: remove the counter design and use this module to insert your own design
     // DO NOT change the I/O header of this design
@@ -624,8 +647,8 @@ module my_chip (
 
   logic [DATA_WIDTH-1:0] pcm_out;
   logic valid_out;
-  logic mic_clk;
-  assign io_out[7] = mic_clk;
+  // logic mic_clk;
+  // assign io_out[7] = mic_clk;
   logic clk_slower;
 /*
   input clk,          // System clock - we are getting 5 MHz - will need 2.5 MHz
@@ -636,7 +659,7 @@ module my_chip (
   output logic mic_clk,
   output logic clk_slower_fft
 */
-  pdm_to_pcm my_pdm_to_cdm(.clk(pllclkout), .pdm_in(pdm_in), .reset(reset), .pcm_out(pcm_out), .valid_out(valid_out), .mic_clk(mic_clk), .clk_slower_fft(clk_slower));
+  pdm_to_pcm my_pdm_to_cdm(.clk(pllclkout), .pdm_in(io_in[0]), .reset(reset), .pcm_out(pcm_out), .valid_out(valid_out), .mic_clk(io_out[7]), .clk_slower_fft(clk_slower));
 
   logic out_valid;
   logic [2:0] highest_bin;
