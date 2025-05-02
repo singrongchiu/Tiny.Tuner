@@ -45,7 +45,7 @@ However, since the sampling frequency is relatively low, and there are only 8 bi
 I chose to use a PDM microphone, which allows for audio to be processed digitally. I also decided to output the dominant FFT bin on a 7segment display.  
 
 ### FFT Implementation
-I decided to implement the version of Radix-2 FFT that does bit reversing at the end, instead of having to change the indices of my mic inputs at the start; this allows for easier implementation and faster logic. The FFT is done iteratively through log2(N) stages and butterfly operations that occur at every stage. 
+I decided to implement the version of Radix-2 FFT that does bit reversing at the end, instead of having to change the indices of my mic inputs at the start; this allows for easier implementation and faster logic. The FFT is done iteratively through log2(N) stages and butterfly operations that occur at every stage. I also decided to roll out all the stages so that Yosys could tell that I am not accessing the same indices of an array with different generations of pairs and groups (within the butterfly stage). Note that a general design FFT that is able to generate the stages based on the number of samples/bins N is available at https://github.com/singrongchiu/TinyTuner/blob/main/fftcode/fftstagepipeline.sv.  
 
 ![8 Point FFT](img/radix-8-fft.jpg)
 
