@@ -6,7 +6,10 @@ Personal Repository: https://github.com/singrongchiu/TinyTuner
 *If you want to directly flash onto the FPGA, you can use next-pnr with src/constraints.lpf, or the above repo contains a bitstream.bit file*
 
 ## TinyTuner
-A small device that can tell you the dominant frequency sound group. Code is used with a PDM microphone and a 7segment display. 
+A small device that can tell you the dominant frequency sound group. 
+
+The system takes audio input from a digital PDM microphone. Since this type of microphone produces a high-speed stream of single bits, the system first processes this stream to convert it into a more standard digital audio format (PCM) at a lower data rate. This processed audio data is then sent to a module that performs a Fast Fourier Transform (FFT). The FFT's job is to analyze the audio and figure out which frequencies are present and how strong they are. After the FFT, the system looks at the results to find the single frequency band that had the strongest signal. Finally, it takes the numerical index of this strongest frequency band and displays that number on a seven-segment display, providing a visual indication of the dominant frequency detected in the audio input.  
+
 
 Here is a video of the module flashed onto an FPGA: 
 https://youtu.be/xEocxD9gWbU 
