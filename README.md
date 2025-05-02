@@ -1,42 +1,11 @@
-# 18-224/624 S25 Tapeout Template
-
-
-1. Add your verilog source files to `source_files` in `info.yaml`. The top level of your chip should remain in `chip.sv` and be named `my_chip`
-
-  
-  
-
-2. Optionally add other details about your project to `info.yaml` as well (this is only for GitHub - your final project submission will involve submitting these in a different format)
-
-3. Do NOT edit `toplevel_chip.v`  `config.tcl` or `pin_order.cfg`
-
- # Final Project Submission Details 
-  
-1. Your design must synthesize at 30MHz but you can run it at any arbitrarily-slow frequency (including single-stepping the clock) on the manufactured chip. If your design must run at an exact frequency, it is safest to choose a lower frequency (i.e. 5MHz)
-
-  
-
-2. For your final project, we will ask you to submit some sort of testbench to verify your design. Include all relevant testing files inside the `testbench` repository
-
-  
-  
-
-3. For your final project, we will ask you to submit documentation on how to run/test your design, as well as include your project proposal and progress reports. Include all these files inside the `docs` repository
-
-  
-  
-
-4. Optionally, if you use any images in your documentation (diagrams, waveforms, etc) please include them in a separate `img` repository
-
-  
-
-5. Feel free to edit this file and include some basic information about your project (short description, inputs and outputs, diagrams, how to run, etc). An outline is provided below
-
 # 18624 Final Project
 
 This is my final project for 18624: Open Source Chip Design! 
+Personal Repository: https://github.com/singrongchiu/TinyTuner 
 
-## TinyTunder
+**If you want to directly flash onto the FPGA, the above repo contains a bitstream.bit file**
+
+## TinyTuner
 A small device that can tell you the dominant frequency. Code is used with a PDM microphone and a 7segment display. 
 
 Here is a video of the module flashed onto an FPGA: 
@@ -55,7 +24,21 @@ An IO table listing all of your inputs and outputs and their function, like the 
 
 ## How to Test
 
-A short description of how to test the design post-tapeout
+A short description of how to test the design post-tapeout:  
+The sampling frequency is 5000 Hz, and so to test each bin, we can use frequencies:  
+
+BIN 0 : 0 - 625 Hz 
+BIN 1 : 625 - 1250 Hz
+BIN 2 : 1250 - 1875 Hz
+BIN 3 : 1875 - 2500 Hz
+BIN 4 : 2500 - 3125 Hz
+BIN 5 : 3125 - 3750 Hz
+BIN 6 : 3750 - 4375 Hz
+BIN 7 : 4375 - 5000 Hz
+
+Play the sine wave frequency next to the microphone, and see the bin change!  
+
+However, since the sampling frequency is relatively low, and there are only 8 bins in this FFT, there is a lot of aliasing that happens and at times it can flicker between bins. 
 
 ## Design Choices
 ### Hardware
