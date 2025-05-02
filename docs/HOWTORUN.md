@@ -1,9 +1,9 @@
 # How to Run
 
-1. Plug or wire the Digilent 7Segment PMOD so that
-   AA is connected GP24
-   AB is connected to GP23  
-   AC is connected to GP22  
+1. Plug or wire the Digilent 7Segment PMOD so that   
+   AA is connected GP24  
+   AB is connected to GP23    
+   AC is connected to GP22    
    AD is connected to GP21  
    AE is connected to GP17  
    AF is connected to GP16  
@@ -11,7 +11,7 @@
    CAT is connected to GP14  
    VCC and GND in the right places as needed  
    
-3. Plug or wire the PDM mic so that
+3. Plug or wire the PDM mic so that   
    SEL is grounded  
    CLK is connected to GN15  
    DATA is connected to GN16  
