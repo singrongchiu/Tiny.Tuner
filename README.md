@@ -41,24 +41,24 @@ BIN 7 : 4375 - 5000 Hz
 
 Play the sine wave frequency next to the microphone, and see the bin change!  
 
-However, since the sampling frequency is relatively low, and there are only 8 bins in this FFT, there is a lot of aliasing that happens and at times it can flicker between bins. 
+However, since the sampling frequency is relatively low, and there are only 8 bins and 8 audio points used in this FFT, there is a lot of aliasing and flickering between bins. 
 
 ## Design Choices
 ### Hardware
 I chose to use a PDM microphone, which allows for audio to be processed digitally. I also decided to output the dominant FFT bin on a 7segment display.  
 
 ### FFT Implementation
-I decided to implement the version of Radix-2 FFT that does bit reversing at the end, instead of having to change the indices of my mic inputs at the start; this allows for easier implementation and faster logic. The FFT is done iteratively through log2(N) stages and butterfly operations that occur at every stage. I also decided to roll out all the stages so that Yosys could tell that I am not accessing the same indices of an array with different generations of pairs and groups (within the butterfly stage). Note that a general design FFT that is able to generate the stages based on the number of samples/bins N is available at https://github.com/singrongchiu/TinyTuner/blob/main/fftcode/fftstagepipeline.sv.  
+I decided to implement the version of Radix-2 FFT that does bit reversing at the end, instead of having to change the indices of my mic inputs at the start; this allows for easier implementation and faster logic. The FFT is done iteratively through log2(N) stages and butterfly operations that occur at every stage. To make sure the Yosys building the chip understood exactly how to do all these calculations at the same time for each stage and that they are not overlapping, I wrote out the steps for each stage individually in the code, rather than using generate statements. Note that a general design FFT that is able to generate the stages based on the number of samples/bins N is available at https://github.com/singrongchiu/TinyTuner/blob/main/fftcode/fftstagepipeline.sv.  
 
 ![8 Point FFT](img/radix-8-fft.jpg)
 
 Twiddle Factors (roots of unity), or the weights that are multiplied at each butterfly operation were generated using the file twiddlegenerate.py from my personal repository. 
 
 ### Pipelining
-I decided to pipeline the FFT by stage, since I don't need to know the dominant frequency faster than my human eye can see the difference on the screen of a tuner. This would also allow us to not have to worry about delay as much or timing the number of clock cycles through the entire system. However, this implementation is a lot slower than pipelineing by sample input like in https://www.sciencedirect.com/science/article/pii/S2213138821008729. Our PDM microphone takes in many digital mic input cycles within one fft stage cycle, resulting in a more accurate audio sample. However, the downside is that there is more hardware associated with every stage.   
+I decided to pipeline the FFT by stage. This pipeline-by-stage approach was chosen because the display update rate required for a tuner (fast enough for the human eye) is relatively slow. While this method is slower than feeding a new sample into the pipeline at every clock cycle (like in https://www.sciencedirect.com/science/article/pii/S2213138821008729), it simplifies the overall system timing. Since many cycles of the slower clock used for the PDM-to-PCM conversion fit within the time allocated for one FFT stage's operation, we can collect a full block of accurate audio samples before processing it through the stage. The trade-off for this design simplicity is that each stage requires dedicated hardware to perform its computations on the entire data block in parallel. 
 
 ### Number of Samples
-I was only able to fit an N = 8 point FFT on my FPGA board due to limited hardware resources. When we have 8 points for an FFT, we divide the sampling frequency into 8 bins. While I originally intended for the device to be able to output Note values, this design wouldn't allow us to tell the exact note because in lower frequencies, notes can be differentiated by tens of Hz.   
+Due to the limited hardware resources available on the FPGA board, the FFT size was constrained to N=8 points. An 8-point FFT divides the input frequency spectrum into only 8 distinct bins. While the initial goal was to identify and output specific musical note values, this N=8 design proved insufficient. Musical notes, particularly in the lower frequency ranges, can be separated by frequency differences of tens of Hertz. 
 
 ## Testing
 N = 64 point FFT working shown in the following testbench: 
