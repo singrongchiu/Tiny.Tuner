@@ -3,7 +3,7 @@
 This is my final project for 18624: Open Source Chip Design! 
 Personal Repository: https://github.com/singrongchiu/TinyTuner 
 
-**If you want to directly flash onto the FPGA, the above repo contains a bitstream.bit file**
+*If you want to directly flash onto the FPGA, the above repo contains a bitstream.bit file*
 
 ## TinyTuner
 A small device that can tell you the dominant frequency. Code is used with a PDM microphone and a 7segment display. 
@@ -62,15 +62,15 @@ https://edaplayground.com/x/B7y7
 
 The output is verifiable by comparing it to an online FFT calculator like this one (https://scistatcalc.blogspot.com/2013/12/fft-calculator.html). Input the stage_real0 output into the real values list, and the outputs should match. Note that the output indices from that FFT are not bit reversed.
 
-This is an example of how to reverse index bits in the output for N = 8.  
-output 000 -> bin 000  
-output 001 -> bin 100  
-output 010 -> bin 010  
-output 011 -> bin 110  
-output 100 -> bin 001  
-output 101 -> bin 101  
-output 110 -> bin 011  
-output 111 -> bin 111  
+This is an example of how to reverse index bits in the output for N = 8.    
+output 000 -> bin 000    
+output 001 -> bin 100    
+output 010 -> bin 010    
+output 011 -> bin 110    
+output 100 -> bin 001    
+output 101 -> bin 101    
+output 110 -> bin 011    
+output 111 -> bin 111    
 
 ## Acknowledgements
 Butterfly operations based on:
